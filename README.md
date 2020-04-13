@@ -1,2 +1,2 @@
 # Pong
-The pong game in c++ with sfml
+The pong game with c++ and sfml
