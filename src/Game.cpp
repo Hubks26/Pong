@@ -1,25 +1,32 @@
 #include "Game.h"
 
+const sf::Time Game::m_timePerFrame = sf::seconds(1.f / 60.f);
+
 Game::Game()
-: m_Window(sf::VideoMode(640, 480), "SFML Application")
+: m_window(sf::VideoMode(640, 480), "SFML Application")
 {
-    m_Player.setRadius(10.f);
-    m_Player.setPosition(m_Window.getSize().x/2, m_Window.getSize().y/2);
-    sf::FloatRect rect = m_Player.getLocalBounds();
-    m_Player.setOrigin(rect.left + rect.width/2, rect.top + rect.height/2);
-    m_Player.setFillColor(sf::Color::Cyan);
+    m_player.setRadius(10.f);
+    m_player.setPosition(m_window.getSize().x/2, m_window.getSize().y/2);
+    sf::FloatRect rect = m_player.getLocalBounds();
+    m_player.setOrigin(rect.left + rect.width/2, rect.top + rect.height/2);
+    m_player.setFillColor(sf::Color::Cyan);
 }
 
 void Game::run()
 {
     sf::Clock clock;
+    sf::Time timeSinceLastUpdate = sf::Time::Zero;
     
-    while (m_Window.isOpen())
+    while (m_window.isOpen())
     {
-        sf::Time deltaTime = clock.restart();
-        
         processEvents();
-        update(deltaTime);
+        timeSinceLastUpdate += clock.restart();
+        while (timeSinceLastUpdate > m_timePerFrame)
+        {
+            timeSinceLastUpdate -= m_timePerFrame;
+            processEvents();
+            update(m_timePerFrame);
+        }
         render();
     }
 }
@@ -27,7 +34,7 @@ void Game::run()
 void Game::processEvents()
 {
     sf::Event event;
-    while (m_Window.pollEvent(event))
+    while (m_window.pollEvent(event))
     {
         switch (event.type)
         {
@@ -40,7 +47,7 @@ void Game::processEvents()
                 break;
                 
             case sf::Event::Closed:
-                m_Window.close();
+                m_window.close();
                 break;
                 
             default:
@@ -53,35 +60,35 @@ void Game::update(sf::Time deltaTime)
 {
     sf::Vector2f movement(0.f, 0.f);
     
-    if (m_IsMovingUp)
+    if (m_isMovingUp)
         movement.y -= m_speed;
-    if (m_IsMovingDown)
+    if (m_isMovingDown)
         movement.y += m_speed;
-    if (m_IsMovingLeft)
+    if (m_isMovingLeft)
         movement.x -= m_speed;
-    if (m_IsMovingRight)
+    if (m_isMovingRight)
         movement.x += m_speed;
     
-    m_Player.move(movement * deltaTime.asSeconds());
+    m_player.move(movement * deltaTime.asSeconds());
 }
 
 void Game::render()
 {
-    m_Window.clear();
-    m_Window.draw(m_Player);
-    m_Window.display();
+    m_window.clear();
+    m_window.draw(m_player);
+    m_window.display();
 }
 
 void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 {
     if (key == sf::Keyboard::Z)
-        m_IsMovingUp = isPressed;
+        m_isMovingUp = isPressed;
     else if (key == sf::Keyboard::S)
-        m_IsMovingDown = isPressed;
+        m_isMovingDown = isPressed;
     else if (key == sf::Keyboard::Q)
-        m_IsMovingLeft = isPressed;
+        m_isMovingLeft = isPressed;
     else if (key == sf::Keyboard::D)
-        m_IsMovingRight = isPressed;
+        m_isMovingRight = isPressed;
 }
 
 

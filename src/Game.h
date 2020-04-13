@@ -20,15 +20,17 @@ class Game
         
     private:
         
-        sf::RenderWindow m_Window;
-        sf::CircleShape m_Player;
+        sf::RenderWindow m_window;
+        sf::CircleShape m_player;
     
-        float m_speed = 200.f;
+        static const sf::Time m_timePerFrame;
         
-        bool m_IsMovingUp;
-        bool m_IsMovingDown;
-        bool m_IsMovingLeft;
-        bool m_IsMovingRight;
+        float m_speed = 170.f;
+        
+        bool m_isMovingUp;
+        bool m_isMovingDown;
+        bool m_isMovingLeft;
+        bool m_isMovingRight;
 };
 
 #endif // GAME_H
