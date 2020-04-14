@@ -2,6 +2,7 @@
 #define BALL_H
 
 #include <SFML/Graphics.hpp>
+#include <cmath>
 
 class Ball : public sf::CircleShape
 {
@@ -9,15 +10,15 @@ class Ball : public sf::CircleShape
         
         Ball();
         
-        void setMoving(bool);
+        void rebound(bool);
         
-        float getSpeed() const;
-        bool isMoving() const;
+        static float getSpeed();
+        sf::Vector2f getSpeedVect() const;
         
     private:
         
-        bool m_isMoving;
-        float m_speed;
+        static float m_speed;
+        sf::Vector2f m_speedVect;
 };
 
 #endif // BALL_H

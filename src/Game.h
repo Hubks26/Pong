@@ -4,6 +4,8 @@
 #include "Player.h"
 #include "Ball.h"
 
+bool areIntersected(sf::Vector2f, sf::Vector2f);
+
 class Game
 {
     public:

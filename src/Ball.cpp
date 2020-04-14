@@ -1,9 +1,9 @@
 #include "Ball.h"
 
+float Ball::m_speed = 700.f;
 
 Ball::Ball()
-: m_isMoving(false)
-, m_speed(300.f)
+: m_speedVect(-m_speed / sqrt(2), m_speed / sqrt(2))
 {
     setRadius(10.f);
     sf::FloatRect rectBall = getLocalBounds();
@@ -11,27 +11,24 @@ Ball::Ball()
     setFillColor(sf::Color::White);
 }
 
-
-/*********
- *Setters*
- * *******/
-
-void Ball::setMoving(bool isMoving)
+void Ball::rebound(bool isVerticalWall)
 {
-    m_isMoving = isMoving;
+    if (isVerticalWall)
+        m_speedVect.x = -m_speedVect.x;
+    else
+        m_speedVect.y = -m_speedVect.y;
 }
-
 
 /*********
  *Getters*
  * *******/
 
-float Ball::getSpeed() const
+float Ball::getSpeed()
 {
     return m_speed;
 }
 
-bool Ball::isMoving() const
+sf::Vector2f Ball::getSpeedVect() const
 {
-    return m_isMoving;
+    return m_speedVect;
 }
