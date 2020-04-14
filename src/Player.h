@@ -7,21 +7,21 @@ class Player : public sf::RectangleShape
 {
     public:
         
-        Player() = default;
+        Player();
         
-        void setIsMovingUp(bool);
-        void setIsMovingDown(bool);
+        void setMovingUp(bool);
+        void setMovingDown(bool);
         
-        float getSpeed();
-        bool getIsMovingUp();
-        bool getIsMovingDown();
+        static float getSpeed();
+        bool isMovingUp() const;
+        bool isMovingDown() const;
         
     private:
         
-        bool m_isMovingUp = false;
-        bool m_isMovingDown = false;
+        bool m_isMovingUp;
+        bool m_isMovingDown;
         
-        static float m_speed;
+        static const float m_speed;
 };
 
 #endif // PLAYERS_H

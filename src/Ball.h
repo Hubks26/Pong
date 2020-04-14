@@ -7,19 +7,17 @@ class Ball : public sf::CircleShape
 {
     public:
         
-        Ball() = default;
+        Ball();
         
-        void setSpeed(float);
-        void setIsMoving(bool);
+        void setMoving(bool);
         
-        float getSpeed();
-        bool getIsMoving();
+        float getSpeed() const;
+        bool isMoving() const;
         
     private:
         
-        bool m_isMoving = false;
-        
-        float m_speed = 300.f;
+        bool m_isMoving;
+        float m_speed;
 };
 
 #endif // BALL_H

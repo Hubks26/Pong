@@ -1,17 +1,26 @@
 #include "Player.h"
 
-float Player::m_speed = 450;
+const float Player::m_speed = 750.f;
+
+Player::Player()
+: m_isMovingUp(false)
+, m_isMovingDown(false)
+{
+    setSize({15u, 150u});
+    sf::FloatRect rectP1 = getLocalBounds();
+    setOrigin(rectP1.left + rectP1.width / 2, rectP1.top + rectP1.height / 2);
+}
 
 /*********
  *Setters*
  * *******/
 
-void Player::setIsMovingUp(bool isMovingUp)
+void Player::setMovingUp(bool isMovingUp)
 {
     m_isMovingUp = isMovingUp;
 }
 
-void Player::setIsMovingDown(bool isMovingDown)
+void Player::setMovingDown(bool isMovingDown)
 {
     m_isMovingDown = isMovingDown;
 }
@@ -25,12 +34,12 @@ float Player::getSpeed()
     return m_speed;
 }
 
-bool Player::getIsMovingUp()
+bool Player::isMovingUp() const
 {
     return m_isMovingUp;
 }
 
-bool Player::getIsMovingDown()
+bool Player::isMovingDown() const
 {
     return m_isMovingDown;
 }
