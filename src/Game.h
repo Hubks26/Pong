@@ -27,8 +27,6 @@ class Game
         Player m_player1;
         Player m_player2;
         Ball m_ball;
-        
-        float m_acceleration;
     
         static const sf::Time m_timePerFrame;
 };

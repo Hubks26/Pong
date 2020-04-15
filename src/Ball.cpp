@@ -5,6 +5,7 @@ const float initialSpeed = 550.f;
 Ball::Ball()
 : m_speed(initialSpeed)
 , m_speedVect(-m_speed / sqrt(2), m_speed / sqrt(2))
+, m_acceleration(30.f)
 {
     setRadius(10.f);
     sf::FloatRect rectBall = getLocalBounds();
@@ -20,9 +21,9 @@ void Ball::rebound(WallPosition wallPosition)
         m_speedVect.y = -m_speedVect.y;
 }
 
-void Ball::acceleration(float speedIncrement)
+void Ball::acceleration()
 {
-    m_speed += speedIncrement;
+    m_speed += m_acceleration;
     m_speedVect.x = (m_speedVect.x / abs(m_speedVect.x)) * m_speed / sqrt(2);
     m_speedVect.y = (m_speedVect.y / abs(m_speedVect.y)) * m_speed / sqrt(2);
 }
@@ -34,8 +35,8 @@ void Ball::acceleration(float speedIncrement)
 void Ball::setInitialSpeed()
 {
     m_speed = initialSpeed;
-    m_speedVect.x = -m_speed / sqrt(2);
-    m_speedVect.y = m_speed / sqrt(2);
+    m_speedVect.x = (m_speedVect.x / abs(m_speedVect.x)) * m_speed / sqrt(2);
+    m_speedVect.y = (m_speedVect.y / abs(m_speedVect.y)) * m_speed / sqrt(2);
 }
 
 /*********

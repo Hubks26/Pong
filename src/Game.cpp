@@ -4,7 +4,6 @@ const sf::Time Game::m_timePerFrame = sf::seconds(1.f / 60.f);
 
 Game::Game()
 : m_window(sf::VideoMode(1100, 600), "The Pong Game")
-, m_acceleration(30.f)
 {
     m_player1.setPosition(m_window.getSize().x / 15, m_window.getSize().y / 2);
     m_player1.setFillColor(sf::Color::Cyan);
@@ -12,7 +11,7 @@ Game::Game()
     m_player2.setPosition(m_window.getSize().x * 14 / 15, m_window.getSize().y / 2);
     m_player2.setFillColor(sf::Color::Red);
     
-    m_ball.setPosition(m_window.getSize().x / 2, 20.f);
+    m_ball.setPosition(m_window.getSize().x / 2, 30.f);
 }
 
 void Game::run()
@@ -81,26 +80,24 @@ void Game::update(sf::Time deltaTime)
     if (m_player2.isMovingDown() && p2Bot <= m_window.getSize().y - tickMovementPlayers)
         movementP2.y += m_player2.getSpeed();
     
-    if (ballLeft < tickMovementBall || ballRight > m_window.getSize().x - tickMovementBall)
-        m_ball.rebound(WallPosition::Vertical);
-    if (ballTop < tickMovementBall || ballBot > m_window.getSize().y - tickMovementBall)
+    if (ballTop <= tickMovementBall || ballBot >= m_window.getSize().y - tickMovementBall)
         m_ball.rebound(WallPosition::Horizontal);
     
     if (rectBall.intersects(rectP1) && ballLeft >= p1Right - tickMovementBall)
     {
         m_ball.rebound(WallPosition::Vertical);
-        m_ball.acceleration(m_acceleration);
+        m_ball.acceleration();
     }
     
     if (rectBall.intersects(rectP2) && ballRight <= p2Left + tickMovementBall)
     {
         m_ball.rebound(WallPosition::Vertical);
-        m_ball.acceleration(m_acceleration);
+        m_ball.acceleration();
     }  
     
     if (ballLeft < tickMovementBall || ballRight > m_window.getSize().x - tickMovementBall)
     {
-        m_ball.setPosition(m_window.getSize().x / 2, 20.f);
+        m_ball.setPosition(m_window.getSize().x / 2, 30.f);
         m_ball.setInitialSpeed();
     }
     

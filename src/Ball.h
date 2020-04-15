@@ -17,7 +17,7 @@ class Ball : public sf::CircleShape
         Ball();
         
         void rebound(WallPosition);
-        void acceleration(float);
+        void acceleration();
         
         void setInitialSpeed();
         
@@ -28,6 +28,7 @@ class Ball : public sf::CircleShape
         
         float m_speed;
         sf::Vector2f m_speedVect;
+        float m_acceleration;
 };
 
 #endif // BALL_H
