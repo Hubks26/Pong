@@ -4,6 +4,7 @@ const sf::Time Game::m_timePerFrame = sf::seconds(1.f / 60.f);
 
 Game::Game()
 : m_window(sf::VideoMode(1100, 600), "The Pong Game")
+, m_acceleration(30.f)
 {
     m_player1.setPosition(m_window.getSize().x / 15, m_window.getSize().y / 2);
     m_player1.setFillColor(sf::Color::Cyan);
@@ -55,7 +56,7 @@ void Game::update(sf::Time deltaTime)
     sf::FloatRect rectBall = m_ball.getGlobalBounds();
     
     float tickMovementPlayers = Player::getSpeed() * m_timePerFrame.asSeconds();
-    float tickMovementBall = Ball::getSpeed() / sqrt(2) * m_timePerFrame.asSeconds();
+    float tickMovementBall = m_ball.getSpeed() / sqrt(2) * m_timePerFrame.asSeconds();
 
     float p1Top = rectP1.top;
     float p2Top = rectP2.top;
@@ -65,12 +66,10 @@ void Game::update(sf::Time deltaTime)
     float p2Bot = rectP2.top + rectP2.height;
     float ballBot = rectBall.top + rectBall.height;
     
-    float p1Left = rectP1.left;
     float p2Left = rectP2.left;
     float ballLeft = rectBall.left;
     
     float p1Right = rectP1.left + rectP1.width;
-    float p2Right = rectP2.left + rectP2.width;
     float ballRight = rectBall.left + rectBall.width;
     
     if (m_player1.isMovingUp() && p1Top >= tickMovementPlayers)
@@ -87,41 +86,24 @@ void Game::update(sf::Time deltaTime)
     if (ballTop < tickMovementBall || ballBot > m_window.getSize().y - tickMovementBall)
         m_ball.rebound(WallPosition::Horizontal);
     
-    if (rectBall.intersects(rectP1))
+    if (rectBall.intersects(rectP1) && ballLeft >= p1Right - tickMovementBall)
     {
-        if (ballLeft >= p1Right - tickMovementBall)
-            m_ball.rebound(WallPosition::Vertical);
-        else if (ballRight <= p1Left + tickMovementBall)
-            m_ball.rebound(WallPosition::Vertical);
-        else if (ballBot <= p1Top + tickMovementBall + tickMovementPlayers)
-        {
-            m_ball.rebound(WallPosition::Horizontal);
-            m_ball.move({0.f, -abs(movementP1.y) * deltaTime.asSeconds()});
-        }
-        else if (ballTop >= p1Bot - tickMovementBall - tickMovementPlayers)
-        {
-            m_ball.rebound(WallPosition::Horizontal);
-            m_ball.move({0.f, abs(movementP1.y) * deltaTime.asSeconds()});
-        }
+        m_ball.rebound(WallPosition::Vertical);
+        m_ball.acceleration(m_acceleration);
     }
     
-    if (rectBall.intersects(rectP2))
+    if (rectBall.intersects(rectP2) && ballRight <= p2Left + tickMovementBall)
     {
-        if (ballRight <= p2Left + tickMovementBall)
-            m_ball.rebound(WallPosition::Vertical);
-        else if (ballLeft >= p2Right - tickMovementBall)
-            m_ball.rebound(WallPosition::Vertical);
-        else if (ballBot <= p2Top + tickMovementBall + tickMovementPlayers)
-        {
-            m_ball.rebound(WallPosition::Horizontal);
-            m_ball.move({0.f, -abs(movementP2.y) * deltaTime.asSeconds()});
-        }
-        else if (ballTop >= p2Bot - tickMovementBall - tickMovementPlayers)
-        {
-            m_ball.rebound(WallPosition::Horizontal);
-            m_ball.move({0.f, abs(movementP2.y) * deltaTime.asSeconds()});
-        }
-    }    
+        m_ball.rebound(WallPosition::Vertical);
+        m_ball.acceleration(m_acceleration);
+    }  
+    
+    if (ballLeft < tickMovementBall || ballRight > m_window.getSize().x - tickMovementBall)
+    {
+        m_ball.setPosition(m_window.getSize().x / 2, 20.f);
+        m_ball.setInitialSpeed();
+    }
+    
     m_player1.move(movementP1 * deltaTime.asSeconds());
     m_player2.move(movementP2 * deltaTime.asSeconds());
     m_ball.move(m_ball.getSpeedVect() * deltaTime.asSeconds());

@@ -1,6 +1,6 @@
 #include "Player.h"
 
-const float Player::m_speed = 750.f;
+const float Player::m_speed = 800.f;
 
 Player::Player()
 : m_isMovingUp(false)

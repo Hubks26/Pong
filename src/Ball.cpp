@@ -1,9 +1,10 @@
 #include "Ball.h"
 
-float Ball::m_speed = 700.f;
+const float initialSpeed = 550.f;
 
 Ball::Ball()
-: m_speedVect(-m_speed / sqrt(2), m_speed / sqrt(2))
+: m_speed(initialSpeed)
+, m_speedVect(-m_speed / sqrt(2), m_speed / sqrt(2))
 {
     setRadius(10.f);
     sf::FloatRect rectBall = getLocalBounds();
@@ -19,11 +20,29 @@ void Ball::rebound(WallPosition wallPosition)
         m_speedVect.y = -m_speedVect.y;
 }
 
+void Ball::acceleration(float speedIncrement)
+{
+    m_speed += speedIncrement;
+    m_speedVect.x = (m_speedVect.x / abs(m_speedVect.x)) * m_speed / sqrt(2);
+    m_speedVect.y = (m_speedVect.y / abs(m_speedVect.y)) * m_speed / sqrt(2);
+}
+
+/*********
+ *Setters*
+ * *******/
+
+void Ball::setInitialSpeed()
+{
+    m_speed = initialSpeed;
+    m_speedVect.x = -m_speed / sqrt(2);
+    m_speedVect.y = m_speed / sqrt(2);
+}
+
 /*********
  *Getters*
  * *******/
 
-float Ball::getSpeed()
+float Ball::getSpeed() const
 {
     return m_speed;
 }

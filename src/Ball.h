@@ -17,13 +17,16 @@ class Ball : public sf::CircleShape
         Ball();
         
         void rebound(WallPosition);
+        void acceleration(float);
         
-        static float getSpeed();
+        void setInitialSpeed();
+        
+        float getSpeed() const;
         sf::Vector2f getSpeedVect() const;
         
     private:
         
-        static float m_speed;
+        float m_speed;
         sf::Vector2f m_speedVect;
 };
 
