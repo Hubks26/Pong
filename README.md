@@ -14,13 +14,13 @@ If you are on a linux system, you can install all of these with the following co
 
 	sudo apt-get install g++ make libsfml-dev
 
-Then you just have to prepare the game with the command:
-// TO WRITE BEING IN THE REPOSITORIE OF THE GAME //
+Then you just have to prepare the game with the command: 
+ // TO WRITE BEING IN THE REPOSITORIE OF THE GAME //
 	
 	make
 
-And to launch it with the command:
-// TO WRITE BEING IN THE REPOSITORIE OF THE GAME //
+And to launch it with the command: 
+ // TO WRITE BEING IN THE REPOSITORIE OF THE GAME //
 
 	bin/Pong
 
@@ -33,6 +33,7 @@ Have fun !
 ## How to play
 
 Player one control : Z, S
+
 Player two control : Up, Down
 
 The serve is for the player who lost the last point!
