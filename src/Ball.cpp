@@ -11,11 +11,11 @@ Ball::Ball()
     setFillColor(sf::Color::White);
 }
 
-void Ball::rebound(bool isVerticalWall)
+void Ball::rebound(WallPosition wallPosition)
 {
-    if (isVerticalWall)
+    if (wallPosition == WallPosition::Vertical)
         m_speedVect.x = -m_speedVect.x;
-    else
+    else if (wallPosition == WallPosition::Horizontal)
         m_speedVect.y = -m_speedVect.y;
 }
 

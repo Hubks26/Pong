@@ -4,13 +4,19 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 
+enum class WallPosition
+{
+    Vertical,
+    Horizontal
+};
+
 class Ball : public sf::CircleShape
 {
     public:
         
         Ball();
         
-        void rebound(bool);
+        void rebound(WallPosition);
         
         static float getSpeed();
         sf::Vector2f getSpeedVect() const;

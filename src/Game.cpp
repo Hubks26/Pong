@@ -1,23 +1,9 @@
 #include "Game.h"
 
-bool areIntersected(sf::Vector2f interval1, sf::Vector2f interval2)
-{
-    bool result = false;
-    if (interval1.x <= interval2.x && interval1.y >= interval2.x)
-        result = true;
-    else if (interval1.x <= interval2.y && interval1.y >= interval2.y)
-        result = true;
-    else if (interval1.x >= interval2.x && interval1.y <= interval2.y)
-        result = true;
-    else if (interval1.x <= interval2.x && interval1.y >= interval2.y)
-        result = true;
-    return result;
-}
-
 const sf::Time Game::m_timePerFrame = sf::seconds(1.f / 60.f);
 
 Game::Game()
-: m_window(sf::VideoMode(1100, 600), "Pong Game")
+: m_window(sf::VideoMode(1100, 600), "The Pong Game")
 {
     m_player1.setPosition(m_window.getSize().x / 15, m_window.getSize().y / 2);
     m_player1.setFillColor(sf::Color::Cyan);
@@ -25,7 +11,7 @@ Game::Game()
     m_player2.setPosition(m_window.getSize().x * 14 / 15, m_window.getSize().y / 2);
     m_player2.setFillColor(sf::Color::Red);
     
-    m_ball.setPosition(m_window.getSize().x / 2, 10.f);
+    m_ball.setPosition(m_window.getSize().x / 2, 20.f);
 }
 
 void Game::run()
@@ -71,34 +57,71 @@ void Game::update(sf::Time deltaTime)
     float tickMovementPlayers = Player::getSpeed() * m_timePerFrame.asSeconds();
     float tickMovementBall = Ball::getSpeed() / sqrt(2) * m_timePerFrame.asSeconds();
 
-    float rectP1Bot = rectP1.top + rectP1.height;
-    float rectP2Bot = rectP2.top + rectP2.height;
-    float rectBallBot = rectBall.top + rectBall.height;
+    float p1Top = rectP1.top;
+    float p2Top = rectP2.top;
+    float ballTop = rectBall.top;
     
-    if (m_player1.isMovingUp() && rectP1.top >= tickMovementPlayers)
+    float p1Bot = rectP1.top + rectP1.height;
+    float p2Bot = rectP2.top + rectP2.height;
+    float ballBot = rectBall.top + rectBall.height;
+    
+    float p1Left = rectP1.left;
+    float p2Left = rectP2.left;
+    float ballLeft = rectBall.left;
+    
+    float p1Right = rectP1.left + rectP1.width;
+    float p2Right = rectP2.left + rectP2.width;
+    float ballRight = rectBall.left + rectBall.width;
+    
+    if (m_player1.isMovingUp() && p1Top >= tickMovementPlayers)
         movementP1.y -= m_player1.getSpeed();
-    if (m_player1.isMovingDown() && rectP1Bot  <= m_window.getSize().y - tickMovementPlayers)
+    if (m_player1.isMovingDown() && p1Bot  <= m_window.getSize().y - tickMovementPlayers)
         movementP1.y += m_player1.getSpeed();
-    if (m_player2.isMovingUp() && rectP2.top >= tickMovementPlayers)
+    if (m_player2.isMovingUp() && p2Top >= tickMovementPlayers)
         movementP2.y -= m_player2.getSpeed();
-    if (m_player2.isMovingDown() && rectP2Bot <= m_window.getSize().y - tickMovementPlayers)
+    if (m_player2.isMovingDown() && p2Bot <= m_window.getSize().y - tickMovementPlayers)
         movementP2.y += m_player2.getSpeed();
     
-    if (rectBall.left < tickMovementBall || rectBall.left + rectBall.width > m_window.getSize().x - tickMovementBall)
-        m_ball.rebound(true);
-    if (rectBall.top < tickMovementBall || rectBallBot > m_window.getSize().y - tickMovementBall)
-        m_ball.rebound(false);
+    if (ballLeft < tickMovementBall || ballRight > m_window.getSize().x - tickMovementBall)
+        m_ball.rebound(WallPosition::Vertical);
+    if (ballTop < tickMovementBall || ballBot > m_window.getSize().y - tickMovementBall)
+        m_ball.rebound(WallPosition::Horizontal);
     
-    if (rectBall.left < tickMovementBall + rectP1.left + rectP1.width && rectBall.left > rectP1.left + rectP1.width && areIntersected({rectBall.top, rectBallBot}, {rectP1.top, rectP1Bot}))
-        m_ball.rebound(true);
-    if (rectBall.left + rectBall.width > rectP2.left - tickMovementBall && rectBall.left + rectBall.width < rectP2.left && areIntersected({rectBall.top, rectBallBot}, {rectP2.top, rectP2Bot}))
-        m_ball.rebound(true);
-        
-    if (rectBall.left + rectBall.width > rectP1.left - tickMovementBall && rectBall.left + rectBall.width < rectP1.left && areIntersected({rectBall.top, rectBallBot}, {rectP1.top, rectP1Bot}))
-        m_ball.rebound(true);
-    if (rectBall.left < rectP2.left + rectP2.width + tickMovementBall && rectBall.left > rectP2.left + rectP2.width && areIntersected({rectBall.top, rectBallBot}, {rectP2.top, rectP2Bot}))
-        m_ball.rebound(true);
-        
+    if (rectBall.intersects(rectP1))
+    {
+        if (ballLeft >= p1Right - tickMovementBall)
+            m_ball.rebound(WallPosition::Vertical);
+        else if (ballRight <= p1Left + tickMovementBall)
+            m_ball.rebound(WallPosition::Vertical);
+        else if (ballBot <= p1Top + tickMovementBall + tickMovementPlayers)
+        {
+            m_ball.rebound(WallPosition::Horizontal);
+            m_ball.move({0.f, -abs(movementP1.y) * deltaTime.asSeconds()});
+        }
+        else if (ballTop >= p1Bot - tickMovementBall - tickMovementPlayers)
+        {
+            m_ball.rebound(WallPosition::Horizontal);
+            m_ball.move({0.f, abs(movementP1.y) * deltaTime.asSeconds()});
+        }
+    }
+    
+    if (rectBall.intersects(rectP2))
+    {
+        if (ballRight <= p2Left + tickMovementBall)
+            m_ball.rebound(WallPosition::Vertical);
+        else if (ballLeft >= p2Right - tickMovementBall)
+            m_ball.rebound(WallPosition::Vertical);
+        else if (ballBot <= p2Top + tickMovementBall + tickMovementPlayers)
+        {
+            m_ball.rebound(WallPosition::Horizontal);
+            m_ball.move({0.f, -abs(movementP2.y) * deltaTime.asSeconds()});
+        }
+        else if (ballTop >= p2Bot - tickMovementBall - tickMovementPlayers)
+        {
+            m_ball.rebound(WallPosition::Horizontal);
+            m_ball.move({0.f, abs(movementP2.y) * deltaTime.asSeconds()});
+        }
+    }    
     m_player1.move(movementP1 * deltaTime.asSeconds());
     m_player2.move(movementP2 * deltaTime.asSeconds());
     m_ball.move(m_ball.getSpeedVect() * deltaTime.asSeconds());
