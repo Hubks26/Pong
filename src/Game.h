@@ -29,6 +29,9 @@ class Game
         Ball m_ball;
     
         static const sf::Time m_timePerFrame;
+        
+        sf::SoundBuffer m_buffer;
+        sf::Sound m_sound;
 };
 
 #endif // GAME_H

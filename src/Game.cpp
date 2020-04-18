@@ -5,6 +5,11 @@ const sf::Time Game::m_timePerFrame = sf::seconds(1.f / 60.f);
 Game::Game()
 : m_window(sf::VideoMode(1100, 600), "The Pong Game")
 {
+    if (!m_buffer.loadFromFile("files/sounds/start.wav"))
+        throw std::runtime_error ("Game::Game() - Failed to load 'files/sounds/start.wav'");
+    m_sound.setBuffer(m_buffer);
+    m_sound.play();
+    
     m_player1.setPosition(m_window.getSize().x / 15, m_window.getSize().y / 2);
     m_player1.setFillColor(sf::Color::Cyan);
     
@@ -18,16 +23,45 @@ void Game::run()
 {
     sf::Clock clock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
+
+    bool isItTheFirstMove = true;
     
     while (m_window.isOpen())
     {
         processEvents();
         timeSinceLastUpdate += clock.restart();
-        while (timeSinceLastUpdate > m_timePerFrame)
+        
+        if (isItTheFirstMove)
         {
-            timeSinceLastUpdate -= m_timePerFrame;
-            update(m_timePerFrame);
+            while (timeSinceLastUpdate > m_timePerFrame)
+            {
+                timeSinceLastUpdate -= m_timePerFrame;
+                
+                handlePlayerInput();
+            
+                if (m_player1.isMovingUp() || m_player1.isMovingDown())
+                {
+                    m_ball.setServe(ServeDirection::Left);
+                    isItTheFirstMove = false;
+                }
+                
+                else if(m_player2.isMovingUp() || m_player2.isMovingDown())
+                {
+                    m_ball.setServe(ServeDirection::Right);
+                    isItTheFirstMove = false;
+                }
+            }
         }
+        
+        else
+        {
+            while (timeSinceLastUpdate > m_timePerFrame)
+            {
+                timeSinceLastUpdate -= m_timePerFrame;
+                update(m_timePerFrame);
+            }
+        }
+        
         render();
     }
 }
@@ -95,10 +129,16 @@ void Game::update(sf::Time deltaTime)
         m_ball.acceleration();
     }  
     
-    if (ballLeft < tickMovementBall || ballRight > m_window.getSize().x - tickMovementBall)
+    if (ballLeft < tickMovementBall) 
     {
         m_ball.setPosition(m_window.getSize().x / 2, 30.f);
-        m_ball.setInitialSpeed();
+        m_ball.setServe(ServeDirection::Left);
+    }
+    
+    if (ballRight > m_window.getSize().x - tickMovementBall)
+    {
+        m_ball.setPosition(m_window.getSize().x / 2, 30.f);
+        m_ball.setServe(ServeDirection::Right);
     }
     
     m_player1.move(movementP1 * deltaTime.asSeconds());
