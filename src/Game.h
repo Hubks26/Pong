@@ -3,6 +3,7 @@
 
 #include "Player.h"
 #include "Ball.h"
+#include "Score.h"
 
 bool areIntersected(sf::Vector2f, sf::Vector2f);
 
@@ -24,8 +25,13 @@ class Game
     private:
         
         sf::RenderWindow m_window;
+        
         Player m_player1;
         Player m_player2;
+        
+        Score m_score1;
+        Score m_score2;
+        
         Ball m_ball;
     
         static const sf::Time m_timePerFrame;

@@ -5,8 +5,8 @@ const sf::Time Game::m_timePerFrame = sf::seconds(1.f / 60.f);
 Game::Game()
 : m_window(sf::VideoMode(1100, 600), "The Pong Game")
 {
-    if (!m_buffer.loadFromFile("files/sounds/start.wav"))
-        throw std::runtime_error ("Game::Game() - Failed to load 'files/sounds/start.wav'");
+    if (!m_buffer.loadFromFile("media/sounds/start.wav"))
+        throw std::runtime_error ("Game::Game() - Failed to load 'media/sounds/start.wav'");
     m_sound.setBuffer(m_buffer);
     m_sound.play();
     
@@ -15,6 +15,12 @@ Game::Game()
     
     m_player2.setPosition(m_window.getSize().x * 14 / 15, m_window.getSize().y / 2);
     m_player2.setFillColor(sf::Color::Red);
+    
+    m_score1.setPosition({10.f, 10.f});
+    
+    sf::FloatRect rectScore2 = m_score2.getLocalBounds();
+    m_score2.setOrigin({rectScore2.left + rectScore2.width, 0.f});
+    m_score2.setPosition({m_window.getSize().x - 10.f, 10.f});
     
     m_ball.setPosition(m_window.getSize().x / 2, 30.f);
 }
@@ -133,12 +139,26 @@ void Game::update(sf::Time deltaTime)
     {
         m_ball.setPosition(m_window.getSize().x / 2, 30.f);
         m_ball.setServe(ServeDirection::Left);
+        
+        if (!m_buffer.loadFromFile("media/sounds/goal.wav"))
+            throw std::runtime_error ("Ball::setInitialSpeed() - Failed to load 'media/sounds/goal.wav'");
+        m_sound.setBuffer(m_buffer);
+        m_sound.play();
+        
+        m_score2.increase();
     }
     
     if (ballRight > m_window.getSize().x - tickMovementBall)
     {
         m_ball.setPosition(m_window.getSize().x / 2, 30.f);
         m_ball.setServe(ServeDirection::Right);
+        
+        if (!m_buffer.loadFromFile("media/sounds/goal.wav"))
+            throw std::runtime_error ("Ball::setInitialSpeed() - Failed to load 'media/sounds/goal.wav'");
+        m_sound.setBuffer(m_buffer);
+        m_sound.play();
+        
+        m_score1.increase();
     }
     
     m_player1.move(movementP1 * deltaTime.asSeconds());
@@ -149,9 +169,15 @@ void Game::update(sf::Time deltaTime)
 void Game::render()
 {
     m_window.clear();
+    
     m_window.draw(m_player1);
     m_window.draw(m_player2);
+    
+    m_window.draw(m_score1);
+    m_window.draw(m_score2);
+    
     m_window.draw(m_ball);
+    
     m_window.display();
 }
 

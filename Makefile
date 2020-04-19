@@ -16,12 +16,15 @@ $(O)/main.o: $(O)/Game.o
 $(O)/Game.o: $(O)/Player.o $(O)/Ball.o
 	$(CC) $(S)/Game.cpp -c -o $(O)/Game.o $(STD) $(FLAGS)
 	
-$(O)/Player.o:
+$(O)/Player.o: $(O)/Score.o
 	$(CC) $(S)/Player.cpp -c -o $(O)/Player.o $(STD) $(FLAGS)
 	
 $(O)/Ball.o:
 	$(CC) $(S)/Ball.cpp -c -o $(O)/Ball.o $(STD) $(FLAGS)
 	
+$(O)/Score.o:
+	$(CC) $(S)/Score.cpp -c -o $(O)/Score.o $(STD) $(FLAGS)
+
 clean: $(O) $(B)
 	rm -r $(O)
 	rm -r $(B)

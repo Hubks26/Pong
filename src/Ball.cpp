@@ -20,8 +20,8 @@ void Ball::rebound(WallPosition wallPosition)
     else if (wallPosition == WallPosition::Horizontal)
         m_speedVect.y = -m_speedVect.y;
     
-    if (!m_buffer.loadFromFile("files/sounds/rebound.wav"))
-        throw std::runtime_error ("Ball::rebound() - Failed to load 'files/sounds/rebound.wav'");
+    if (!m_buffer.loadFromFile("media/sounds/rebound.wav"))
+        throw std::runtime_error ("Ball::rebound() - Failed to load 'media/sounds/rebound.wav'");
     m_sound.setBuffer(m_buffer);
     m_sound.play();
 }
@@ -53,11 +53,6 @@ void Ball::setServe(ServeDirection dir)
             m_speedVect.y = m_speed / sqrt(2);
             break;
     }
-
-    if (!m_buffer.loadFromFile("files/sounds/goal.wav"))
-        throw std::runtime_error ("Ball::setInitialSpeed() - Failed to load 'files/sounds/goal.wav'");
-    m_sound.setBuffer(m_buffer);
-    m_sound.play();
 }
 
 /*********

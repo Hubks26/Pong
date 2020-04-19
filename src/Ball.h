@@ -4,7 +4,7 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include <iostream>
+#include <stdexcept>
 
 enum class WallPosition
 {
