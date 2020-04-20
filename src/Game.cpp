@@ -32,8 +32,6 @@ void Game::run()
 {
     sf::Clock clock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
-
-    bool isItTheFirstMove = true;
     
     m_soundStart.play();
     
@@ -42,29 +40,6 @@ void Game::run()
         processEvents();
         timeSinceLastUpdate += clock.restart();
         
-        if (isItTheFirstMove)
-        {
-            while (timeSinceLastUpdate > m_timePerFrame)
-            {
-                timeSinceLastUpdate -= m_timePerFrame;
-                
-                handlePlayerInput();
-            
-                if (m_player1.isMovingUp() || m_player1.isMovingDown())
-                {
-                    m_ball.setServe(ServeDirection::Left);
-                    isItTheFirstMove = false;
-                }
-                
-                else if(m_player2.isMovingUp() || m_player2.isMovingDown())
-                {
-                    m_ball.setServe(ServeDirection::Right);
-                    isItTheFirstMove = false;
-                }
-            }
-        }
-        
-        else
         {
             while (timeSinceLastUpdate > m_timePerFrame)
             {
@@ -91,6 +66,29 @@ void Game::processEvents()
 void Game::update(sf::Time deltaTime)
 {
     handlePlayerInput();
+    
+    if (m_ball.getSpeedVect().x == 0.f)
+    {
+        if (m_score1.getValue() == 0u && m_score2.getValue() == 0u)
+        {
+            if (m_player1.isMovingUp() || m_player1.isMovingDown())
+            {
+                m_ball.setServe(ServeDirection::Left);
+            }
+            
+            else if(m_player2.isMovingUp() || m_player2.isMovingDown())
+            {
+                m_ball.setServe(ServeDirection::Right);
+            }
+        }
+        
+        else if (m_isBallLaunched && m_isLastPointForP1)
+            m_ball.setServe(ServeDirection::Right);
+        
+        else if (m_isBallLaunched && !m_isLastPointForP1)
+            m_ball.setServe(ServeDirection::Left);
+            
+    }
     
     sf::Vector2f movementP1(0.f, 0.f);
     sf::Vector2f movementP2(0.f, 0.f);
@@ -142,22 +140,25 @@ void Game::update(sf::Time deltaTime)
     
     if (ballLeft < tickMovementBall) 
     {
-        m_ball.setPosition(m_window.getSize().x / 2, 30.f);
-        m_ball.setServe(ServeDirection::Left);
-        
         m_soundGoal.play();
-        
         m_score2.increase();
+        
+        m_ball.setPosition(m_window.getSize().x / 2, 30.f);
+        m_ball.stop();
+        
+        m_isLastPointForP1 = false;
+    
     }
     
     if (ballRight > m_window.getSize().x - tickMovementBall)
     {
-        m_ball.setPosition(m_window.getSize().x / 2, 30.f);
-        m_ball.setServe(ServeDirection::Right);
-        
         m_soundGoal.play();
-        
         m_score1.increase();
+        
+        m_ball.setPosition(m_window.getSize().x / 2, 30.f);
+        m_ball.stop();
+        
+        m_isLastPointForP1 = true;
     }
     
     m_player1.move(movementP1 * deltaTime.asSeconds());
@@ -186,6 +187,6 @@ void Game::handlePlayerInput()
     m_player1.setMovingDown(sf::Keyboard::isKeyPressed(sf::Keyboard::S));
     m_player2.setMovingUp(sf::Keyboard::isKeyPressed(sf::Keyboard::Up));
     m_player2.setMovingDown(sf::Keyboard::isKeyPressed(sf::Keyboard::Down));
+    
+    m_isBallLaunched = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 }
-
-

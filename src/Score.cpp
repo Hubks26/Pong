@@ -3,9 +3,9 @@
 Score::Score()
 : m_value(0u)
 {
-    if (!m_font.loadFromFile("media/fonts/Arial.ttf"))
+    if (!m_font.loadFromFile("media/fonts/arial.ttf"))
     {
-        throw std::runtime_error ("Textbox::build() - Failed to load 'media/fonts/Arial.ttf'");
+        throw std::runtime_error ("Textbox::build() - Failed to load 'media/fonts/arial.ttf'");
     }
     m_text.setFont(m_font);
     m_text.setFillColor(sf::Color::White);
@@ -23,6 +23,11 @@ void Score::increase()
 /**********
  * Getter *
  **********/
+
+unsigned Score::getValue() const
+{
+    return m_value;
+}
 
 sf::FloatRect Score::getLocalBounds() const
 {

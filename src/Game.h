@@ -12,6 +12,9 @@ class Game
         Game();
         void run();
         
+        bool m_isLastPointForP1;
+        bool m_isBallLaunched;
+        
     private:
         
         void processEvents();

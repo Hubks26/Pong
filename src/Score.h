@@ -14,6 +14,7 @@ class Score : public sf::Drawable, public sf::Transformable
         
         void increase();
         
+        unsigned getValue() const;
         sf::FloatRect getLocalBounds() const;
         
     private:

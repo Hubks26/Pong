@@ -26,6 +26,7 @@ class Ball : public sf::CircleShape
         
         void rebound(WallPosition);
         void acceleration();
+        void stop();
         
         void setServe(ServeDirection);
         
@@ -39,7 +40,9 @@ class Ball : public sf::CircleShape
         float m_acceleration;
         
         sf::SoundBuffer m_bufferRebound;
+        sf::SoundBuffer m_bufferLaunch;
         sf::Sound m_soundRebound;
+        sf::Sound m_soundLaunch;
 };
 
 #endif // BALL_H

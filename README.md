@@ -36,6 +36,8 @@ Player one control : Z, S
 
 Player two control : Up, Down
 
+SPACE to serve !
+
 The serve is for the player who lost the last point!
 
 ---
