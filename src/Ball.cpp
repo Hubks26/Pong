@@ -7,6 +7,10 @@ Ball::Ball()
 , m_speedVect(-m_speed / sqrt(2), m_speed / sqrt(2))
 , m_acceleration(30.f)
 {
+    if (!m_bufferRebound.loadFromFile("media/sounds/rebound.wav"))
+        throw std::runtime_error ("Ball::Ball() - Failed to load 'media/sounds/rebound.wav'");
+    m_soundRebound.setBuffer(m_bufferRebound);
+    
     setRadius(10.f);
     sf::FloatRect rectBall = getLocalBounds();
     setOrigin(rectBall.left + rectBall.width / 2, rectBall.top);
@@ -20,10 +24,7 @@ void Ball::rebound(WallPosition wallPosition)
     else if (wallPosition == WallPosition::Horizontal)
         m_speedVect.y = -m_speedVect.y;
     
-    if (!m_buffer.loadFromFile("media/sounds/rebound.wav"))
-        throw std::runtime_error ("Ball::rebound() - Failed to load 'media/sounds/rebound.wav'");
-    m_sound.setBuffer(m_buffer);
-    m_sound.play();
+    m_soundRebound.play();
 }
 
 void Ball::acceleration()

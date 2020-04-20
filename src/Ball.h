@@ -38,8 +38,8 @@ class Ball : public sf::CircleShape
         sf::Vector2f m_speedVect;
         float m_acceleration;
         
-        sf::SoundBuffer m_buffer;
-        sf::Sound m_sound;
+        sf::SoundBuffer m_bufferRebound;
+        sf::Sound m_soundRebound;
 };
 
 #endif // BALL_H

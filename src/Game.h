@@ -5,8 +5,6 @@
 #include "Ball.h"
 #include "Score.h"
 
-bool areIntersected(sf::Vector2f, sf::Vector2f);
-
 class Game
 {
     public:
@@ -36,8 +34,10 @@ class Game
     
         static const sf::Time m_timePerFrame;
         
-        sf::SoundBuffer m_buffer;
-        sf::Sound m_sound;
+        sf::SoundBuffer m_bufferStart;
+        sf::SoundBuffer m_bufferGoal;
+        sf::Sound m_soundStart;
+        sf::Sound m_soundGoal;
 };
 
 #endif // GAME_H

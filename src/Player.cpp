@@ -8,7 +8,7 @@ Player::Player()
 {
     setSize({15u, 150u});
     sf::FloatRect rectP1 = getLocalBounds();
-    setOrigin(rectP1.left + rectP1.width / 2, rectP1.top + rectP1.height / 2);
+    setOrigin(rectP1.width / 2, rectP1.height / 2);
 }
 
 /*********
